@@ -29,8 +29,8 @@ function breathingNode(x, y, lens, generation, r, w, h) {
     }).connect(panner).toMaster();
 
 
-    breathIn.playbackRate = maxR/500;
-    breathOut.playbackRate = maxR/500;
+    breathIn.playbackRate = 500/maxR;
+    breathOut.playbackRate = 500/maxR;
 
     this.display = function(){
 
@@ -38,10 +38,10 @@ function breathingNode(x, y, lens, generation, r, w, h) {
         ellipse(x, y, r, r);
 
         if (r > maxR){
-            breathIn.start();
+            breathOut.start();
             dr = -dr;
         } else if (r < 0){
-            breathOut.start();
+            breathIn.start();
             dr = -dr;
         }
         r += dr;

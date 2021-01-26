@@ -3,14 +3,30 @@ var bnode1;
 var bnode2;
 var started = false;
 var touch = 0;
+var leftnodes = [];
+var rightnodes=[];
+
+var leftPitch;
+var rightPitch;
+
+const leftPan = new Tone.Panner (-1).toMaster();
+const rightPan = new Tone.Panner (1).toMaster();
 
 
-const bowler = new Tone.Player({
+const leftBowl = new Tone.Player({
   "url" : "sound/meditation_bowl.wav",
   "autostart" : false,
   "loop" : true,
   "volume" : -10,
-}).toMaster();
+}).connect(leftPan).toMaster();
+
+const rightBowl = new Tone.Player({
+  "url" : "sound/meditation_bowl.wav",
+  "autostart" : false,
+  "loop" : true,
+  "volume" : -10,
+}).connect(rightPan).toMaster();
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -25,6 +41,8 @@ function draw() {
   background(150, 100, 100);
   noFill();
   noStroke(255);
+
+  
     
     if (bnodes.length>0) {
       for(var i = 0; i < bnodes.length; i++){
@@ -42,13 +60,27 @@ function windowResized(){
 }
 
 function touchStarted(){
+
+  var n = (Math.random()>=0.50)?1:-1;
   
   if (touch == 0){
-    bowler.start();
+    leftBowl.start();
+    rightBowl.start(); 
   }
   
-  bnode2 = new breathingNode(mouseX, mouseY, 200, 1, random(400, 500), windowWidth, windowHeight);
+  bnode2 = new breathingNode(mouseX, mouseY, 200, 1, random(300, 500), windowWidth, windowHeight);
   bnodes.push(bnode2);
+
+  leftBowl.playbackRate = 1 + n*(leftnodes.length/100);
+  rightBowl.playbackRate = 1 + n*(rightnodes.length/100);
+
+  if (bnode2.x < windowWidth/2) {
+    leftnodes.push(bnode2);
+  }
+
+  if (bnode2.x > windowWidth/2) {
+    rightnodes.push(bnode2);
+  }
 
   touch += 1;
     
